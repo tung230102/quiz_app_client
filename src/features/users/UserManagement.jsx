@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Button, ButtonGroup } from "@mui/material";
+import { Avatar, Box, Button, ButtonGroup } from "@mui/material";
 import { useEffect, useState } from "react";
 import { createUser, getListUsers, removeUser, updateUser } from "~/api";
 import {
@@ -63,10 +63,25 @@ function UserManagement() {
       flex: 1,
     },
     {
-      field: "created_at",
+      field: "avatar_link",
+      headerName: "Avatar",
+      flex: 1,
+      sortable: false,
+      renderCell: (params) => (
+        <Avatar src={params.row.avatar_link} variant="rounded" />
+      ),
+    },
+    {
+      field: "createdAt",
       headerName: "Create At",
       flex: 1,
-      renderCell: (params) => <>{dateFormat(params.row.created_at)}</>,
+      renderCell: (params) => <>{dateFormat(params.row.createdAt)}</>,
+    },
+    {
+      field: "updatedAt",
+      headerName: "Create At",
+      flex: 1,
+      renderCell: (params) => <>{dateFormat(params.row.updatedAt)}</>,
     },
     {
       field: "roles",

@@ -53,3 +53,11 @@ export const removeUser = async (id) => {
   });
   return res;
 };
+
+export const updateCurrentUser = async (data) => {
+  const res = await adminServicePatch({
+    target: `users/updateMe`,
+    data,
+  });
+  return res;
+};

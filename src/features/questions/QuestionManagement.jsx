@@ -75,6 +75,12 @@ function QuestionManagement() {
       renderCell: (params) => <>{dateFormat(params.row.createdAt)}</>,
     },
     {
+      field: "updatedAt",
+      headerName: "Update At",
+      flex: 1,
+      renderCell: (params) => <>{dateFormat(params.row.updatedAt)}</>,
+    },
+    {
       field: "action",
       headerName: "Actions",
       flex: 1,
