@@ -83,6 +83,7 @@ const QuestionCreateUpdateModal = ({
           label="Title"
           name="title"
           register={register}
+          minLength={10}
           errors={errors}
           required
         />

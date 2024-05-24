@@ -2,13 +2,13 @@ import { Fragment, lazy, useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Loader } from "~/common";
 import AuthRouter from "~/components/AuthRouter";
+import ForgotPasswordPage from "~/pages/ForgotPasswordPage";
 import LoginPage from "~/pages/LoginPage";
 import RegisterPage from "~/pages/RegisterPage";
 import { routes } from "~/routes";
 
 const DefaultLayout = lazy(() => import("~/layouts"));
 const PageNotFound = lazy(() => import("~/pages/PageNotFound"));
-const ForgotPasswordPage = lazy(() => import("~/pages/ForgotPasswordPage"));
 
 function AppRoutes() {
   const [loading, isLoading] = useState(true);
@@ -25,7 +25,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
-      {/* <Route path="/forgot-password" element={<ForgotPasswordPage />} /> */}
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/404" element={<PageNotFound />} />
       <Route>
         {routes.map(

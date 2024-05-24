@@ -108,7 +108,7 @@ function LoginForm() {
               register={register}
               errors={errors}
               required
-              minLength={7}
+              minLength={8}
               disabled={isLoading}
             />
             <CommonButton

@@ -40,6 +40,10 @@ function RegistrationForm() {
         reset();
       } else if (res.statusCode === statusCode.BAD_REQUEST) {
         showToast(res?.message, "error");
+      } else if (res?.error?.code === 11000) {
+        showToast("Email already exists", "error");
+      } else if (res?.error?.statusCode === 500) {
+        showToast("Password Confirm: Passwords are not the same!", "error");
       } else {
         showToast("Register fail!", "error");
       }
@@ -93,7 +97,7 @@ function RegistrationForm() {
               register={register}
               errors={errors}
               required
-              minLength={7}
+              minLength={8}
               disabled={isLoading}
             />
             <CommonTextField
@@ -103,7 +107,7 @@ function RegistrationForm() {
               register={register}
               errors={errors}
               required
-              minLength={7}
+              minLength={8}
               disabled={isLoading}
             />
             <CommonButton

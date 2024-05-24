@@ -17,14 +17,12 @@ import { useCache, useTitleDynamic } from "~/hooks";
 import { dateFormat } from "~/utils";
 import UserCreateUpdateModal from "./UserCreateUpdateModal";
 
-const initFilterValue = { role1: "admin", role2: "user" };
 const initQueryParamValue = {
-  // sortField: "created_at",
-  // ...initFilterValue,
-  // keyWord: "",
-  // order: "DESC",
-  // page: 1,
-  // size: 10,
+  sortField: "created_at",
+  keyWord: "",
+  order: "DESC",
+  page: 1,
+  size: 10,
 };
 
 function UserManagement() {
@@ -32,7 +30,7 @@ function UserManagement() {
   const [showModalCreate, setShowModalCreate] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [queryParams, setQueryParams] = useState(initQueryParamValue);
-  const [filterValue, setFilterValue] = useState(initFilterValue);
+  const [filterValue, setFilterValue] = useState({});
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [listUsers, setListUsers] = useState([]);
@@ -88,7 +86,6 @@ function UserManagement() {
       headerName: "Roles",
       flex: 1,
       sortable: false,
-      // renderCell: (params) => <>{params?.row?.roles}</>,
       renderCell: (params) => <>{params?.row?.roles?.join(", ")}</>,
     },
     {
@@ -156,8 +153,8 @@ function UserManagement() {
   };
 
   const handleClearFilter = () => {
-    setFilterValue(initFilterValue);
-    setQueryParams((pre) => ({ ...pre, ...initFilterValue }));
+    setFilterValue({});
+    setQueryParams(initQueryParamValue);
   };
 
   const handleSubmitFilter = () => {
@@ -252,22 +249,13 @@ function UserManagement() {
             dropdownContent={
               <Box>
                 <CommonSingleSelect
-                  label="Role 1"
-                  value={filterValue.role1}
+                  label="Roles"
+                  value={filterValue.roles}
                   options={[
                     { label: "Admin", value: "admin" },
                     { label: "User", value: "user" },
                   ]}
-                  onChange={(value) => handleChangeFilter("role1", value)}
-                />
-                <CommonSingleSelect
-                  label="Role 2"
-                  value={filterValue.role2}
-                  options={[
-                    { label: "Admin", value: "admin" },
-                    { label: "User", value: "user" },
-                  ]}
-                  onChange={(value) => handleChangeFilter("role2", value)}
+                  onChange={(value) => handleChangeFilter("roles", value)}
                 />
               </Box>
             }

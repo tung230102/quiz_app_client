@@ -89,7 +89,7 @@ function UploadAvatarField() {
         <>
           <Grid align="center">
             <Avatar src={avatar} alt="avatar" />
-            <Heading>Update User Data</Heading>
+            <Heading>Change User Data</Heading>
           </Grid>
           <form onSubmit={handleSubmit(onSubmit)}>
             <CommonTextField
@@ -124,7 +124,7 @@ function UploadAvatarField() {
               progress={isLoading}
             />
             <CommonButton fullWidth sx={{ mt: 1 }}>
-              Update
+              Change Data
             </CommonButton>
           </form>
         </>

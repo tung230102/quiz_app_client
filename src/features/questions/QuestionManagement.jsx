@@ -24,11 +24,11 @@ import { dateFormat } from "~/utils";
 import QuestionCreateUpdateModal from "./QuestionCreateUpdateModal";
 
 const initQueryParamValue = {
-  // sortField: "createdAt",
-  // keyWord: "",
-  // order: "DESC",
-  // size: 10,
-  // page: 1,
+  sortField: "createdAt",
+  keyWord: "",
+  order: "DESC",
+  size: 10,
+  page: 1,
 };
 
 function QuestionManagement() {
@@ -148,7 +148,6 @@ function QuestionManagement() {
     getListQuestions(queryParams).then((res) => {
       if (res) {
         const questions = res?.result;
-
         const totalPage = res?.totalPages;
         setListQuestion(questions);
         setTotalPages(totalPage);
@@ -167,6 +166,8 @@ function QuestionManagement() {
         setShowModalCreate(false);
       } else if (res?.statusCode === statusCode.BAD_REQUEST) {
         showToast(res?.message, "error");
+      } else if (res?.error?.code === 11000) {
+        showToast("Question already exists", "error");
       } else {
         showToast("Create question fail!", "error");
       }

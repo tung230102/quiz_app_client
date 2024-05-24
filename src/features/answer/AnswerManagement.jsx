@@ -177,7 +177,7 @@ const AnswerManagement = () => {
         &larr; Go back
       </CommonButton>
       <Loading loading={isLoading}>
-        {listAnswers?.length > 0 && (
+        {listAnswers?.length >= 0 && (
           <CommonTable rows={rowsData} columns={columns} showPagination={false}>
             <CommonButton
               startIcon={<AddIcon />}

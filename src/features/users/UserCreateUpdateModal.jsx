@@ -87,7 +87,7 @@ const UserCreateUpdateModal = ({
               register={register}
               errors={errors}
               required
-              minLength={7}
+              minLength={8}
             />
             <CommonTextField
               label="Password Confirm"
@@ -96,7 +96,7 @@ const UserCreateUpdateModal = ({
               register={register}
               errors={errors}
               required
-              minLength={7}
+              minLength={8}
             />
           </>
         )}
