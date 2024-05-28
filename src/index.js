@@ -5,7 +5,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
 import ErrorFallback from "./components/ErrorFallback";
-import { QuizProvider } from "./context/QuizContext";
 import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -16,9 +15,7 @@ root.render(
     onReset={() => window.location.replace("/")}
   >
     <Router>
-      <QuizProvider>
-        <App />
-      </QuizProvider>
+      <App />
     </Router>
   </ErrorBoundary>
   // </React.StrictMode>

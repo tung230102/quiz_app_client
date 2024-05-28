@@ -1,22 +1,37 @@
+import React from "react";
 import { CommonButton } from "~/common";
 import { useQuiz } from "~/context/QuizContext";
 
-export default function AnswerOptions({ question }) {
-  const { dispatch, answersId } = useQuiz();
+const AnswerOptions = () => {
+  const { state, dispatch } = useQuiz();
+  const { currentQuestion, listQuestionSubmitted } = state;
+
+  const selectedAnswers =
+    listQuestionSubmitted.find((q) => q.id === currentQuestion.id)
+      ?.answersSubmittedId || [];
+
+  const handleChooseAnswer = (answerId) => {
+    dispatch({
+      type: "CHOOSE_ANSWER",
+      payload: { questionId: currentQuestion.id, answerId },
+    });
+  };
 
   return (
-    <div style={{ width: 600 }}>
-      {question?.answers?.map((option) => (
+    <>
+      {currentQuestion?.answers?.map((option) => (
         <CommonButton
-          sx={{ mb: 2 }}
+          sx={{ mb: 1 }}
           fullWidth
           key={option.id}
-          color={answersId.includes(option.id) ? "inherit" : "primary"}
-          onClick={() => dispatch({ type: "newAnswer", payload: option.id })}
+          color={selectedAnswers.includes(option.id) ? "primary" : "inherit"}
+          onClick={() => handleChooseAnswer(option.id)}
         >
           {option.content}
         </CommonButton>
       ))}
-    </div>
+    </>
   );
-}
+};
+
+export default AnswerOptions;

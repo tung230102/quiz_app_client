@@ -1,62 +1,55 @@
-import { Box, Container, Paper, Typography } from "@mui/material";
-import { CommonButton, Heading, Loading } from "~/common";
+import { Box, Grid, Paper, Typography } from "@mui/material";
+import { CommonButton, Heading } from "~/common";
 import { useQuiz } from "~/context/QuizContext";
 
-const paperStyle = {
+const stylePaper = {
   margin: "20px auto",
   padding: "20px",
   minWidth: "360px",
   maxWidth: "400px",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
 };
 
-const paperStyle2 = {
+const stylePaper2 = {
   margin: "20px auto",
   padding: "20px",
-  minWidth: "360px",
-
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   height: "480px",
   overflowY: "scroll",
-  scrollbarWidth: "none",
+  // scrollbarWidth: "none",
+  minWidth: "360px",
+  maxWidth: "600px",
 };
 
-const styleAround = {
-  backgroundColor: "green",
-  borderRadius: "50%",
-  padding: "8px",
-  height: "28px",
-  width: "28px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  marginLeft: "4px",
+const StyleGrid = ({ strong, color, text }) => {
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={8}>
+        <strong>{strong}</strong>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography
+          textAlign="right"
+          variant="h6"
+          sx={{ color: `${color}.main` }}
+        >
+          {text}
+        </Typography>
+      </Grid>
+    </Grid>
+  );
 };
 
-const styleBox1 = {
-  display: "flex",
-  justifyContent: "space-between",
-  padding: 1,
-};
-
-const styleBox2 = {
-  display: "flex",
-  alignItems: "center",
-};
-
-function FinishScreen() {
+const FinishScreen = () => {
+  const { state, dispatch } = useQuiz();
   const {
-    dispatch,
+    numberOfQuestions,
     totalScore,
     highScore,
-    handleSubmitQuestion,
-    listQuestionSubmitted,
     listQuestionChecked,
-  } = useQuiz();
+    listQuestionSubmitted,
+  } = state;
 
   const percentage = (totalScore / 10) * 100;
   const roundedTotalScore = totalScore?.toFixed(2);
@@ -68,117 +61,112 @@ function FinishScreen() {
   if (percentage >= 0 && percentage < 50) emoji = "👎";
   if (percentage === 0) emoji = "🤯";
 
-  return (
-    <Container>
-      <Loading>
-        <Paper elevation={10} style={paperStyle}>
-          <Typography variant="h6">
-            (High score: {highScore?.toFixed(2)} points)
-          </Typography>
-          {totalScore || listQuestionChecked ? (
-            <>
-              <Typography variant="body1">
-                <span>{emoji}</span> You scored{" "}
-                <strong>{roundedTotalScore || 0}</strong> out of {10} points. (
-                {Math.ceil(percentage) || 0}%)
-              </Typography>
-              <CommonButton onClick={() => dispatch({ type: "restart" })}>
-                Restart quiz
-              </CommonButton>
-            </>
-          ) : (
-            <CommonButton
-              color="success"
-              onClick={() => handleSubmitQuestion({ listQuestionSubmitted })}
-            >
-              Submit questions
-            </CommonButton>
-          )}
-        </Paper>
+  const correctAnswers = listQuestionChecked.filter((question) =>
+    question.answers.some(
+      (option) => option.is_correct && option.is_submit_correct
+    )
+  ).length;
 
-        {totalScore >= 0 && (
-          <Paper elevation={10} sx={paperStyle2}>
-            {listQuestionChecked &&
-              listQuestionChecked.map((question) => (
-                <Box key={question.id}>
-                  <Heading>{question.title}</Heading>
-                  <Box
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      margin: 8,
-                    }}
-                  >
-                    <img
-                      src={question.thumbnail_link}
-                      alt="thumbnail_link"
-                      style={{ maxWidth: "320px", maxHeight: "300px" }}
-                    />
-                  </Box>
+  const wrongAnswers = listQuestionChecked.filter((question) =>
+    question.answers.some(
+      (option) => !option.is_correct && option.is_submit_correct
+    )
+  ).length;
 
-                  <Box sx={styleBox1}>
-                    <Box sx={styleBox2}>
-                      Number Answers Correct{" "}
-                      <span style={styleAround}>
-                        {question.numberAnswersCorrect}
-                      </span>
-                    </Box>
-                    <Box sx={styleBox2}>
-                      Number Submit Correct{" "}
-                      <span style={{ ...styleAround, backgroundColor: "blue" }}>
-                        {question.numberSubmitCorrect}
-                      </span>
-                    </Box>
-                  </Box>
-
-                  <Box sx={styleBox1}>
-                    <Box sx={styleBox2}>
-                      Number Submit Incorrect{" "}
-                      <span
-                        style={{ ...styleAround, backgroundColor: "yellow" }}
-                      >
-                        {question.numberSubmitIncorrect}
-                      </span>
-                    </Box>
-                    <Box sx={styleBox2}>
-                      Score This Question{" "}
-                      <span style={{ ...styleAround, backgroundColor: "gray" }}>
-                        {question.scoreThisQuestion}
-                      </span>
-                    </Box>
-                  </Box>
-
-                  <Box style={{ width: 600 }}>
-                    {question.answers.map((option) => (
-                      <CommonButton
-                        key={option.id}
-                        variant="contained"
-                        fullWidth
-                        sx={{
-                          mb: 2,
-                          backgroundColor:
-                            option.is_correct && option.is_submit_correct
-                              ? "blue"
-                              : option.is_correct &&
-                                option.is_submit_correct === undefined
-                              ? "green"
-                              : !option.is_correct &&
-                                option.is_submit_correct === false
-                              ? "yellow"
-                              : !option.is_correct && "red",
-                        }}
-                      >
-                        {option.content}
-                      </CommonButton>
-                    ))}
-                  </Box>
-                </Box>
-              ))}
-          </Paper>
-        )}
-      </Loading>
-    </Container>
+  const totalAnswersSubmitted = listQuestionSubmitted.reduce(
+    (total, question) => total + question.answersSubmittedId.length,
+    0
   );
-}
+
+  return (
+    <>
+      <Paper elevation={10} sx={stylePaper}>
+        <Heading color="black">Your Final score</Heading>
+        <Heading variant="h6">
+          (High score: {highScore?.toFixed(2)} points)
+        </Heading>
+        <Heading variant="body1">
+          <span>{emoji}</span> You scored{" "}
+          <strong>{roundedTotalScore || 0}</strong> out of {10} points. (
+          {Math.ceil(percentage) || 0}%)
+        </Heading>
+        <StyleGrid strong="Total Questions" text={numberOfQuestions} />
+        <StyleGrid
+          strong="Correct Answer"
+          color="success"
+          text={correctAnswers}
+        />
+        <StyleGrid strong="Wrong Answer" color="error" text={wrongAnswers} />
+        <StyleGrid
+          strong="Answer Submitted"
+          color="info"
+          text={totalAnswersSubmitted}
+        />
+
+        <CommonButton
+          fullWidth
+          sx={{ mt: 1 }}
+          onClick={() => dispatch({ type: "RESTART" })}
+        >
+          Restart
+        </CommonButton>
+      </Paper>
+
+      <Paper elevation={10} sx={stylePaper2}>
+        {listQuestionChecked &&
+          listQuestionChecked?.map((question, index) => (
+            <Box key={question?.id} width="100%">
+              <Heading color="black">
+                {index + 1}. {question?.title}
+              </Heading>
+              <Box
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: 8,
+                }}
+              >
+                {question?.thumbnail_link && (
+                  <img
+                    src={question.thumbnail_link}
+                    alt="thumbnail"
+                    style={{
+                      height: "auto",
+                      maxWidth: "100%",
+                      maxHeight: "300px",
+                      objectFit: "cover",
+                    }}
+                  />
+                )}
+              </Box>
+
+              {question?.answers?.map((option) => (
+                <CommonButton
+                  key={option.id}
+                  fullWidth
+                  sx={{ mb: 1 }}
+                  color={getOptionColor(option)}
+                >
+                  {option.content}
+                </CommonButton>
+              ))}
+            </Box>
+          ))}
+      </Paper>
+    </>
+  );
+};
+
+const getOptionColor = (option) => {
+  if (option.is_correct && option.is_submit_correct) {
+    return "success";
+  } else if (!option.is_correct && option.is_submit_correct) {
+    return "error";
+  } else if (option.is_correct && !option.is_submit_correct) {
+    return "info";
+  } else {
+    return "inherit";
+  }
+};
 
 export default FinishScreen;

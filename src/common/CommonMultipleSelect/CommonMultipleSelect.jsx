@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import { Box } from "@mui/material";
 
 export const CommonMultipleSelect = ({
-  control,
+  control = null,
   name = "roles",
   error,
   defaultValue = [{ value: "user", label: "User" }],
@@ -12,6 +12,7 @@ export const CommonMultipleSelect = ({
     { value: "user", label: "User" },
   ],
   message = "Please select at least one option",
+  isMulti = true,
 }) => {
   return (
     <Box mt={1}>
@@ -20,7 +21,9 @@ export const CommonMultipleSelect = ({
         control={control}
         defaultValue={defaultValue}
         rules={{ required: message }}
-        render={({ field }) => <Select isMulti {...field} options={options} />}
+        render={({ field }) => (
+          <Select isMulti={isMulti} {...field} options={options} />
+        )}
       />
       {error && (
         <Box color="#d32f2f" mt={0.4} fontSize={13}>

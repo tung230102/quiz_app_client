@@ -1,23 +1,40 @@
+import { Fab, Grid } from "@mui/material";
 import { useQuiz } from "~/context/QuizContext";
 
-const style = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  fontSize: "1.4rem",
-};
+const ProgressBar = () => {
+  const { state, dispatch } = useQuiz();
+  const { questions, currentQuestionIndex, listQuestionSubmitted } = state;
 
-function ProgressBar() {
-  const { index, numQuestions } = useQuiz();
+  // Function to check if a question has any selected answers
+  const isQuestionAnswered = (questionIndex) => {
+    return listQuestionSubmitted.some(
+      (submitted) =>
+        submitted.id === questions[questionIndex].id &&
+        submitted.answersSubmittedId.length > 0
+    );
+  };
 
   return (
-    <header style={style}>
-      <progress max={numQuestions} value={index + 1} />
-      <p>
-        Question <strong>{index + 1}</strong>/{numQuestions}
-      </p>
-    </header>
+    <Grid item xs={12} sm={4}>
+      {questions?.map((q, i) => (
+        <Fab
+          key={i}
+          size="small"
+          sx={{ m: 0.5 }}
+          color={
+            currentQuestionIndex === i
+              ? "secondary"
+              : isQuestionAnswered(i)
+              ? "primary"
+              : "default"
+          }
+          onClick={() => dispatch({ type: "GO_TO_QUESTION", payload: i })}
+        >
+          {i + 1}
+        </Fab>
+      ))}
+    </Grid>
   );
-}
+};
 
 export default ProgressBar;

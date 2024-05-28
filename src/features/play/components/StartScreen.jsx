@@ -1,32 +1,73 @@
-import { Box, Typography } from "@mui/material";
-import { CommonButton } from "~/common";
+import { Grid, Paper, Typography } from "@mui/material";
+import { CommonButton, Heading } from "~/common";
 import { useQuiz } from "~/context/QuizContext";
 
-const paperStyle = {
-  display: "flex",
-  alignItems: "center",
-  flexDirection: "column",
-  gap: 1,
+const stylePaper = {
   margin: "20px auto",
   padding: "20px",
   minWidth: "360px",
   maxWidth: "400px",
 };
 
-export default function StartScreen() {
-  const { numQuestions, dispatch } = useQuiz();
+const difficultyColorMap = {
+  easy: "success",
+  medium: "warning",
+  hard: "error",
+};
+
+const StyleGrid = ({ strong, color, text }) => {
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={8}>
+        <strong>{strong}</strong>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="h6" sx={{ color: `${color}.main` }}>
+          {text}
+        </Typography>
+      </Grid>
+    </Grid>
+  );
+};
+
+const StartScreen = () => {
+  const { state, dispatch } = useQuiz();
+  const { questions, numberOfQuestions, secondsRemaining } = state;
+  const mins = Math.floor(secondsRemaining / 60);
+  const secs = secondsRemaining % 60;
+
+  const difficulty = questions[0]?.difficulty || "N/A";
+  const difficultyColor = difficultyColorMap[difficulty] || "text.primary";
+  const category = questions[0]?.category || "N/A";
 
   return (
-    <Box sx={paperStyle}>
-      <Typography variant="h5" fontWeight={600}>
-        Welcome to The React Quiz!
-      </Typography>
-      <Typography variant="h6" textAlign="center" noWrap>
-        {numQuestions} questions to test your React mastery
-      </Typography>
-      <CommonButton onClick={() => dispatch({ type: "start" })}>
-        Let's start
+    <Paper elevation={10} sx={stylePaper}>
+      <Heading color="black">Quiz Info</Heading>
+      <StyleGrid
+        strong="Number of questions"
+        color="info"
+        text={numberOfQuestions}
+      />
+      <StyleGrid strong="Category" color="secondary" text={category} />
+      <StyleGrid
+        strong="Difficulty"
+        color={difficultyColor}
+        text={difficulty}
+      />
+      <StyleGrid
+        strong="Time"
+        text={mins > 0 ? `${mins} mins` : `${secs} secs`}
+      />
+
+      <CommonButton
+        fullWidth
+        sx={{ mt: 1 }}
+        onClick={() => dispatch({ type: "START" })}
+      >
+        Start
       </CommonButton>
-    </Box>
+    </Paper>
   );
-}
+};
+
+export default StartScreen;

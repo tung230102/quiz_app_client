@@ -7,19 +7,11 @@ const ProfilePage = lazy(() => import("~/pages/ProfilePage"));
 const UsersPage = lazy(() => import("~/pages/UsersPage"));
 const QuestionsPage = lazy(() => import("~/pages/QuestionsPage"));
 const AnswerPage = lazy(() => import("~/pages/AnswerPage"));
-const HomePage = lazy(() => import("~/features/play copy/Play"));
 
 const routes = [
   {
     path: "/play",
     component: PlayPage,
-    layout: HeaderOnly,
-    permissions: ["user"],
-    authPermissions: ["read"],
-  },
-  {
-    path: "/home",
-    component: HomePage,
     layout: HeaderOnly,
     permissions: ["user"],
     authPermissions: ["read"],

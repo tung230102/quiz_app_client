@@ -40,7 +40,8 @@ const AnswerCreateUpdateModal = ({
   const handleClickClose = debounce(onClose, 100);
 
   const onSubmit = (data) => {
-    const isCorrectValue = data.is_correct === "true";
+    const isCorrectValue =
+      data.is_correct === "true" || data.is_correct === true;
     if (isUpdateSession) {
       const newDataUpdate = {
         ...data,
@@ -74,8 +75,8 @@ const AnswerCreateUpdateModal = ({
           name="is_correct"
           label="Correct"
           options={[
-            { value: "true", label: "Correct" },
-            { value: "false", label: "In Correct" },
+            { value: true, label: "Correct" },
+            { value: false, label: "In Correct" },
           ]}
         />
         <CommonButton fullWidth sx={{ mt: 1 }}>

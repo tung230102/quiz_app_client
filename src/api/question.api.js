@@ -52,9 +52,10 @@ export const uploadThumbnail = async (data) => {
   return res;
 };
 
-export const getListQuestionsPlay = async (total) => {
+export const getListQuestionsPlay = async (params) => {
   const res = await adminServiceGet({
-    target: `questions/play?total=${total}`,
+    target: `questions/play`,
+    params,
   });
   return res;
 };

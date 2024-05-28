@@ -13,7 +13,7 @@ import {
   showToast,
 } from "~/common";
 import { statusCode } from "~/constants";
-import { useCache, useTitleDynamic } from "~/hooks";
+import { useTitleDynamic } from "~/hooks";
 import { dateFormat } from "~/utils";
 import UserCreateUpdateModal from "./UserCreateUpdateModal";
 
@@ -77,7 +77,7 @@ function UserManagement() {
     },
     {
       field: "updatedAt",
-      headerName: "Create At",
+      headerName: "Update At",
       flex: 1,
       renderCell: (params) => <>{dateFormat(params.row.updatedAt)}</>,
     },
@@ -161,11 +161,9 @@ function UserManagement() {
     setQueryParams((pre) => ({ ...pre, ...filterValue, page: 1 }));
   };
 
-  const { getDataCache } = useCache();
-
   const queryListUser = async () => {
     setIsLoading(true);
-    getDataCache(queryParams, getListUsers).then((res) => {
+    getListUsers(queryParams).then((res) => {
       if (res) {
         const users = res?.result;
         const totalPage = res?.totalPages;

@@ -1,28 +1,44 @@
+import { Heading } from "~/common";
 import { useQuiz } from "~/context/QuizContext";
 import AnswerOptions from "./AnswerOptions";
-import { Heading } from "~/common";
+import ButtonOptions from "./ButtonOptions";
+import CountdownTimer from "./CountdownTimer";
 
-function QuestionCard() {
-  const { questions, index } = useQuiz();
-  const question = questions[index];
+const QuestionCard = () => {
+  const { state } = useQuiz();
+  const { currentQuestion, currentQuestionIndex } = state;
 
   return (
-    <div>
-      {question && (
-        <>
-          <Heading>{question.title}</Heading>
-          <div style={{ display: "flex", justifyContent: "center", margin: 8 }}>
-            <img
-              src={question.thumbnail_link}
-              alt="thumbnail_link"
-              style={{ maxWidth: "320px", maxHeight: "300px" }}
-            />
-          </div>
-          <AnswerOptions question={question} />
-        </>
-      )}
-    </div>
+    <>
+      <Heading color="black">
+        {currentQuestionIndex + 1}. {currentQuestion?.title}
+      </Heading>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          margin: 8,
+        }}
+      >
+        {currentQuestion?.thumbnail_link && (
+          <img
+            src={currentQuestion.thumbnail_link}
+            alt="thumbnail"
+            style={{
+              height: "auto",
+              maxWidth: "100%",
+              maxHeight: "300px",
+              objectFit: "cover",
+            }}
+          />
+        )}
+      </div>
+
+      <AnswerOptions />
+      <CountdownTimer />
+      <ButtonOptions />
+    </>
   );
-}
+};
 
 export default QuestionCard;

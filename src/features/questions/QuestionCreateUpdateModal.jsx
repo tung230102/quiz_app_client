@@ -1,6 +1,9 @@
+import { Box } from "@mui/material";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
+import { uploadThumbnail } from "~/api";
 import {
   CommonBoxModal,
   CommonButton,
@@ -9,8 +12,13 @@ import {
   Heading,
   showToast,
 } from "~/common";
-import { uploadThumbnail } from "~/api";
 import { statusCode } from "~/constants";
+
+const difficultyOptions = [
+  { value: "easy", label: "Easy" },
+  { value: "medium", label: "Medium" },
+  { value: "hard", label: "Hard" },
+];
 
 const QuestionCreateUpdateModal = ({
   open = false,
@@ -30,10 +38,19 @@ const QuestionCreateUpdateModal = ({
     handleSubmit,
     reset,
     formState: { errors },
+    control,
+    getValues,
   } = useForm();
 
   useEffect(() => {
-    reset(isUpdateSession ? updateValues : {});
+    const difficulty = difficultyOptions.find(
+      (option) => option.value === dataToUpdate.difficulty
+    );
+    const newDataUpdate = {
+      ...updateValues,
+      difficulty: difficulty ? [difficulty] : [],
+    };
+    reset(isUpdateSession ? newDataUpdate : {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -66,7 +83,10 @@ const QuestionCreateUpdateModal = ({
   };
 
   const onSubmit = (data) => {
-    const newData = { ...data, thumbnail_link };
+    const difficultyArray = getValues("difficulty");
+    const difficulty = difficultyArray[0]?.value || difficultyArray.value;
+    const newData = { ...data, thumbnail_link, difficulty };
+
     if (isUpdateSession) {
       handleClickUpdate(newData);
     } else {
@@ -87,6 +107,48 @@ const QuestionCreateUpdateModal = ({
           errors={errors}
           required
         />
+        <CommonTextField
+          label="Category"
+          name="category"
+          register={register}
+          errors={errors}
+          required
+        />
+        {/* <Box mt={1}>
+          <Controller
+            name="category"
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={[
+                  { value: "sport", label: "Sport" },
+                  { value: "geography", label: "Geography" },
+                  { value: "history", label: "History" },
+                  { value: "other", label: "Other" },
+                ]}
+              />
+            )}
+            control={control}
+            defaultValue={{ value: "sport", label: "Sport" }}
+          />
+        </Box> */}
+        <Box mt={1}>
+          <Controller
+            name="difficulty"
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={[
+                  { value: "easy", label: "Easy" },
+                  { value: "medium", label: "Medium" },
+                  { value: "hard", label: "Hard" },
+                ]}
+              />
+            )}
+            control={control}
+            defaultValue={{ value: "easy", label: "Easy" }}
+          />
+        </Box>
         <CommonTextField
           label="Thumbnail Link"
           name="thumbnail_link"

@@ -1,29 +1,34 @@
 import { useEffect } from "react";
 import { useQuiz } from "~/context/QuizContext";
 
-const timer = {
+const timerStyle = {
   float: "left",
-  fontSize: "16x",
+  fontSize: "16px",
   border: "1px solid #ccc",
   padding: "8px 16px",
   borderRadius: "40px",
 };
 
 function CountdownTimer() {
-  const { dispatch, secondsRemaining } = useQuiz();
+  const { dispatch, state, handleSubmitQuestion } = useQuiz();
+  const { secondsRemaining } = state;
 
   const mins = Math.floor(secondsRemaining / 60);
   const secs = secondsRemaining % 60;
 
   useEffect(() => {
     const timer = setInterval(() => {
-      dispatch({ type: "tick" });
+      dispatch({
+        type: "TICK",
+        handleSubmitQuestion,
+      });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [dispatch]);
+  }, [dispatch, handleSubmitQuestion]);
+
   return (
-    <div style={timer}>
+    <div style={timerStyle}>
       {mins < 10 && "0"}
       {mins}:{secs < 10 && "0"}
       {secs}

@@ -11,13 +11,17 @@ export const CommonTextField = ({
   errors = "",
   required = false,
   minLength = null,
+  min = null,
+  max = null,
   pattern = null,
   helperText = "",
   value = undefined,
+  defaultValue = null,
   onChange = () => {},
 }) => {
   return (
     <TextField
+      defaultValue={defaultValue}
       value={value}
       onChange={onChange}
       label={label}
@@ -30,6 +34,15 @@ export const CommonTextField = ({
         minLength: minLength && {
           value: minLength,
           message: `Must be at least ${minLength} characters long`,
+        },
+        min: min && {
+          value: min,
+
+          message: `Value must be greater than or equal to ${min}.`,
+        },
+        max: max && {
+          value: max,
+          message: `Value must be less than or equal to ${max}.`,
         },
         pattern: pattern && {
           value: pattern.value,

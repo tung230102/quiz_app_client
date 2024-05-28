@@ -43,6 +43,8 @@ function QuestionManagement() {
   const [dataToUpdate, setDataToUpdate] = useState({
     title: "",
     thumbnail_link: "",
+    category: "",
+    difficulty: "",
   });
   const [dataToDelete, setDataToDelete] = useState({ id: "", title: "" });
 
@@ -57,6 +59,16 @@ function QuestionManagement() {
     {
       field: "title",
       headerName: "Title",
+      flex: 1,
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      flex: 1,
+    },
+    {
+      field: "difficulty",
+      headerName: "Difficulty",
       flex: 1,
     },
     {
@@ -101,6 +113,8 @@ function QuestionManagement() {
                 id: params.row.id,
                 title: params.row.title,
                 thumbnail_link: params.row.thumbnail_link,
+                category: params.row.category,
+                difficulty: params.row.difficulty,
               });
             }}
             startIcon={<EditIcon />}
